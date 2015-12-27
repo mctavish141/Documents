@@ -6,6 +6,7 @@ client = MongoClient()
 def doesCollectionExists (collectionName, db):
     collections = db.collection_names()
     return collectionName in collections
+
 def createStartUsers ():
     db = client.NewsDB
     if not doesCollectionExists('users', db):
@@ -15,6 +16,7 @@ def createStartUsers ():
                  'password': '123',
                  'admin': 1}
         db.users.insert_one(user1)
+
 def getCollections():
     db = client.NewsDB
     collections = db.getCollectionNames()
