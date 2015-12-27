@@ -3,7 +3,6 @@ from django import forms
 class AddArticleForm(forms.Form):
     title = forms.CharField(max_length=100, label='', required=True)
     description = forms.CharField(widget=forms.Textarea, label='', required=True)
-    #(attrs={'cols': 100, 'rows': 1})
 
 class AddCommentForm(forms.Form):
     description = forms.CharField(widget=forms.Textarea, label='', required=True)
@@ -44,8 +43,6 @@ class SearchArticlesForm(forms.Form):
     current_datetime = datetime.now()
     minYear = getMinYear()
     year_choices = range(minYear, current_datetime.year + 1)
-    #date_from = forms.DateField(widget=SelectDateWidget(years=year_choices), initial='2015-12-01')
-    #date_to = forms.DateField(widget=SelectDateWidget(years=year_choices), initial='2015-12-21')
     date_from = forms.DateField(widget=SelectDateWidget(years=year_choices), initial='{0}-01-01'.format(minYear))
     date_to = forms.DateField(widget=SelectDateWidget(years=year_choices), initial=current_datetime.date())
     title = forms.CharField(required=False)
