@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     url(r'^statistics/$', 'News.views.statistics'),
     url(r'^backup/$', 'News.views.backupDatabase'),
     url(r'^restore/$', 'News.views.restoreDatabase'),
-    url(r'^remove-user-comments/(?P<userLogin>.+)/$', 'News.views.removeUserComments', name='userLogin'),
+    url(r'^remove-user-comments/(?P<userLogin>.+)/$', 'News.views.removeUserComments',
+                                                      name='userLogin'),
     url(r'^testing/$', 'News.views.testing'),
 )
