@@ -19,7 +19,8 @@ class RegisterForm(forms.Form):
     surname = forms.CharField(required=True)
 
 class ManageCommentsForm(forms.Form):
-    comments_list = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, label='Choose comments', choices=())
+    comments_list = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                              label='Choose comments', choices=())
     def __init__(self, *args, **kwargs):
         comments = kwargs.pop('comments', None)
         super(ManageCommentsForm, self).__init__(*args, **kwargs)
