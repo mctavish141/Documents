@@ -44,6 +44,8 @@ class SearchArticlesForm(forms.Form):
     current_datetime = datetime.now()
     minYear = getMinYear()
     year_choices = range(minYear, current_datetime.year + 1)
-    date_from = forms.DateField(widget=SelectDateWidget(years=year_choices), initial='{0}-01-01'.format(minYear))
-    date_to = forms.DateField(widget=SelectDateWidget(years=year_choices), initial=current_datetime.date())
+    date_from = forms.DateField(widget=SelectDateWidget(years=year_choices),
+                                initial='{0}-01-01'.format(minYear))
+    date_to = forms.DateField(widget=SelectDateWidget(years=year_choices),
+                              initial=current_datetime.date())
     title = forms.CharField(required=False)
