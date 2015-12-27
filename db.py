@@ -40,7 +40,6 @@ def getAllUsersRemoved():
 def getAllArticles():
     db = client.NewsDB
     articlesCollection = db.articles
-    #cursor = articlesCollection.find()
     cursor = articlesCollection.find().sort('datetime', pymongo.DESCENDING)
     articles = []
     for article in cursor:
@@ -130,14 +129,12 @@ def getUserCommentsCount(userLogin):
         'login': userLogin,
     })
     if user is None:
-        #return None
         return 0
 
     articles = db.articles.find({
         'comments.author': userLogin
     })
     if articles is None:
-        #return None
         return 0
 
     commentsList = []
@@ -209,15 +206,6 @@ def addArticle(articleInfo):
     }
 
     db.articles.insert_one(article)
-
-#dt = datetime.now()
-#print str(dt.time())[:5]
-
-#import pymongo
-#db = client.NewsDB
-#cursor = db.articles.find().sort('datetime', pymongo.DESCENDING)
-#for document in cursor:
-#    print document['datetime'],document['title']
 
 def editArticle(articleInfo, articleID):
     db = client.NewsDB
@@ -299,17 +287,6 @@ def removeComments(commentsList, articleID):
             {'$set': {'comments': new_comments}}
         )
 
-#commentsList = [3]
-#articleID = '8'
-#removeComments(commentsList,articleID)
-
-#db = client.NewsDB
-#article = db.articles.find_one({
-#    '_id': '2'
-#})
-#print dict.has_key(article, 'titles')
-#print 'title' in article
-
 def getMinYear():
     db = client.NewsDB
     articlesCollection = db.articles
@@ -337,24 +314,6 @@ def searchArticles(date_from, date_to, title):
         articles.append(article)
     return articles
 
-#for article in searchArticles(datetime.now().replace(year=1996), datetime.now().replace(hour=14, minute=3,second=1), 'ti'):
-#    print article['datetime'], article['title']
-#for article in getAllArticles():
-#    print article
-#for article in searchArticles(datetime.date(datetime(2015, 12, 21)), datetime.date(datetime(2015, 12, 22)), ''):
-#    print article
-
-def fff(title):
-    db = client.NewsDB
-    cursor = db.articles.find({
-        #'title': {'$regex': '.*{0}.*'.format(title)}
-        'title': {'$regex': '.*{0}.*'.format(title), '$options': 'i'}
-    })
-    for doc in cursor:
-        print doc
-
-#fff('')
-
 ###################################
 # Statistics
 
@@ -363,23 +322,6 @@ def getMostViewedArticles():
     cursor = db.articles.find({
         'views': {'$gt': 0}
     }).sort('views', pymongo.DESCENDING)
-    articles = []
-    for article in cursor:
-        articles.append(article)
-
-    return articles[:10]
-
-### temporary
-def getMostCommentedArticles0():
-    db = client.NewsDB
-    cursor = db.articles.find()
-    for article in cursor:
-        if 'comments' in article:
-            article['comments_count'] = len(article['comments'])
-        else:
-            article['comments_count'] = 0
-
-    cursor = cursor.sort('comments_count', pymongo.DESCENDING)
     articles = []
     for article in cursor:
         articles.append(article)
@@ -408,9 +350,6 @@ def getMostCommentedArticles():
 
     return articles[:10]
 
-#for art in getMostCommentedArticles():
-#    print art['title'],art['comments_count']
-
 def getMostPublishedUsers():
     db = client.NewsDB
     cursorUsers = db.users.find({
@@ -437,9 +376,6 @@ def getMostPublishedUsers():
 
     return users[:10]
 
-#for user in getMostPublishedUsers():
-#    print user['login'],user['articles_count']
-
 def getMostCommentedUsers():
     db = client.NewsDB
     cursorUsers = db.users.find()
@@ -464,67 +400,8 @@ def getMostCommentedUsers():
 
     return users[:10]
 
-#for user in getMostCommentedUsers():
-#    print user['login'],user['comments_count']
-
 ###################################
 # Backup
-
-def back1():
-    db = client.NewsDB
-    cur = db['users'].find()
-    for doc in cur:
-        print doc
-
-    for col in db.collection_names():
-        print col
-
-#back1()
-
-def back2():
-    #db = client.NewsDB
-    dbBackup = client.B2
-    dbBackup.col1.insert_one({
-        'name': 'doc2'
-    })
-
-#back2()
-
-def back3():
-    client.drop_database('B2')
-    client.admin.command('copydb',
-                         fromdb='NewsDBBackup',
-                         todb='B2')
-
-#back3()
-
-def back4():
-    client.drop_database('NewsDBBackup')
-    client.admin.command('copydb',
-                         fromdb='B2',
-                         todb='NewsDBBackup')
-
-#back4()
-
-def back5():
-    client.drop_database('NewsDBBackup')
-    client.admin.command('copydb',
-                         fromdb='B3',
-                         todb='NewsDBBackup')
-
-#back5()
-
-def back6(fromDB,toDB):
-    if fromDB in client.database_names():
-        client.drop_database(toDB)
-        client.admin.command('copydb',
-                         fromdb=fromDB,
-                         todb=toDB)
-
-#back6('B3', 'B2')
-
-#####
-#####
 
 def copyDB(fromDB,toDB):
     if fromDB in client.database_names():
@@ -547,91 +424,8 @@ def backupToCustomDB(todb):
 def restoreFromCustomDB(fromdb):
     return copyDB(fromdb, 'NewsDB')
 
-#backupDB()
-#restoreDB()
-
-#####
-#####
-
-def backupDB2():
-    client.drop_database('NewsDBBackup')
-    client.admin.command('copydb',
-                         fromdb='NewsDB',
-                         todb='NewsDBBackup')
-
-def restoreDB2():
-    client.drop_database('NewsDB')
-    client.admin.command('copydb',
-                         fromdb='NewsDBBackup',
-                         todb='NewsDB')
-
 ###################################
 # Testing
-
-def test1 ():
-    createStartUsers()
-    db = client.NewsDB
-    #print doesCollectionExists('users', db)
-    #print getAllUsers()
-
-    #users = db.users
-    #users.delete_one({'name': 'Serhii'})
-
-    user1 = {'name': 'Serhii - 2',
-             'surname': 'Kopach',
-             'login': 'serega',
-             'password': '123',
-             'admin': 1}
-    #db.users.insert_one(user1)
-
-    user2 = db.users.find_one({'name': 'Serhii - 2'})
-    if user2 is not None:
-        print user2['name']
-    #user2['name'] = 'NewName' - DOES NOTHING
-    db.users.update_one(
-        {'name': 'Serhii - 2'},
-        {
-            "$set": {
-                "name": "NewName",
-                'surname': "NewSurName"
-            }
-        }
-    )
-
-    for user in getAllUsers():
-        print user
-def test2 ():
-    db = client.NewsDB
-    db.users.update_one (
-        {'name': 'Serhii'},
-        {'$set':
-             {
-                 'password': '123'
-             }
-        }
-    )
-def test3 ():
-    user2 = {'name': 'Ivan',
-             'surname': 'Ivanov',
-             'login': 'ivanov',
-             'password': '456',
-             'admin': 0}
-    db = client.NewsDB
-    db.users.insert_one(user2)
-    showAllUsers()
-
-def showAllUsers():
-    db = client.NewsDB
-    users = getAllUsers()
-    for user in users:
-        print user
-
-pass
-
-###########################
-
-###################################
-# Testing - 2
 
 def testing():
     time1 = datetime.now()
@@ -641,5 +435,3 @@ def testing():
     print time1
     print time2
     print (time2 - time1).microseconds
-
-#testing()
