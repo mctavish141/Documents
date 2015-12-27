@@ -1,17 +1,12 @@
 # Create your views here.
 
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 import db
 from db import ArticleInfo,UserInfo,CommentInfo
 
 def index(request):
-    #return HttpResponse("<h1>News Application! :)</h1>")
-    return HttpResponseRedirect('/home')
-
-#def users(request):
-#    usersList = db.getAllUsers()
-#    return render(request, 'users.html', {'users': usersList})
+    return HttpResponseRedirect('/home/')
 
 def makeUsersCommentsCounts(usersList):
     for user in usersList:
@@ -42,7 +37,6 @@ def showUser(request, userLogin):
     if user is None:
         user = db.findUserRemoved(userLogin)
         if user is not None:
-            #return HttpResponse("<h1>This account has been removed.</h1>")
             return render(request, 'user.html', {'user': None, 'userRemoved': user, 'user_whose_session': userSession.user})
         else:
             return HttpResponseRedirect('/')
@@ -66,10 +60,6 @@ def removeUser(request, userLogin):
     if userSession.flag == True:
         if (userSession.user.admin == True) or (userSession.user.login == userLogin):
             db.removeUser(userLogin)
-
-    #if userSession.flag == True:
-    #    if userSession.user.admin == True:
-    #        db.removeUser(userLogin)
 
     return HttpResponseRedirect('/')
 
@@ -132,7 +122,6 @@ def editArticle(request, articleID):
             db.editArticle(articleInfo, articleID)
             return HttpResponseRedirect(getArticleLinkID(articleID))
     else:
-        #form = AddArticleForm()
         article = db.getArticle(articleID)
         if article is None:
             return HttpResponseRedirect('/')
@@ -158,7 +147,6 @@ def showArticle (request, articleID):
 
             db.addComment(commentInfo, articleID)
             return HttpResponseRedirect(request.path)
-            #return HttpResponseRedirect('/')
     else:
         form = AddCommentForm()
         db.updateArticleCounter(articleID)
@@ -167,7 +155,6 @@ def showArticle (request, articleID):
     if article is None:
         return HttpResponseRedirect('/')
     else:
-        #article['link'] = getArticleLink(article)
         article['ID'] = articleID
         return render(request, 'article.html', {'article': article, 'form': form, 'user': userSession.user})
 
@@ -262,7 +249,6 @@ def home(request):
     if request.method == 'POST':
         # if logoff posted
         if 'submitButton1' in request.POST:
-            #currentUser = None
             userSession.flag = False
             userSession.user = None
             return HttpResponseRedirect('/home/')
@@ -274,7 +260,6 @@ def home(request):
                 login = form.cleaned_data['login']
                 password = form.cleaned_data['password']
 
-                #currentUser = db.getUser(login,password)
                 user = db.getUser(login,password)
                 if user is not None:
                     userSession.flag = True
@@ -299,9 +284,6 @@ def home(request):
         return render(request, 'home.html', {'user': userSession.user, 'form': form, 'text': text, 'articles': articlesList})
     else:
         return render(request, 'home.html', {'user': None, 'guest': True, 'form': form, 'articles': articlesList})
-
-    #articlesList = db.getAllArticles()
-    #return render(request, 'home.html', {'articles': articlesList})
 
 def statistics(request):
     if userSession.flag == False:
@@ -358,10 +340,10 @@ def createTestArticle():
 
 from datetime import datetime
 def testing(request):
-    #if userSession.flag == False:
-    #    return HttpResponseRedirect('/')
-    #if userSession.user.admin == False:
-    #    return HttpResponseRedirect('/')
+    if userSession.flag == False:
+        return HttpResponseRedirect('/')
+    if userSession.user.admin == False:
+        return HttpResponseRedirect('/')
 
     range1 = 10000  #articles - insert
     range2 = 100  #comments
