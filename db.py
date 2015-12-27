@@ -300,8 +300,10 @@ def getMinYear():
         return article['datetime'].year
 
 def searchArticles(date_from, date_to, title):
-    datetime_from = datetime.min.replace(year=date_from.year,month=date_from.month,day=date_from.day)
-    datetime_to = datetime.max.replace(year=date_to.year,month=date_to.month,day=date_to.day)
+    datetime_from = datetime.min.replace(year=date_from.year,
+                                         month=date_from.month,day=date_from.day)
+    datetime_to = datetime.max.replace(year=date_to.year,
+                                       month=date_to.month,day=date_to.day)
 
     db = client.NewsDB
     cursor = db.articles.find({
