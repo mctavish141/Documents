@@ -37,7 +37,8 @@ def showUser(request, userLogin):
     if user is None:
         user = db.findUserRemoved(userLogin)
         if user is not None:
-            return render(request, 'user.html', {'user': None, 'userRemoved': user, 'user_whose_session': userSession.user})
+            return render(request, 'user.html', {'user': None, 'userRemoved': user,
+                                                 'user_whose_session': userSession.user})
         else:
             return HttpResponseRedirect('/')
 
@@ -72,7 +73,8 @@ def removeUserComments(request, userLogin):
     db.removeUserComments(userLogin)
     return HttpResponseRedirect('/users/{0}/'.format(userLogin))
 
-from forms import AddArticleForm,LoginForm,AddCommentForm,RegisterForm,ManageCommentsForm,SearchArticlesForm
+from forms import AddArticleForm,LoginForm,AddCommentForm,RegisterForm,ManageCommentsForm,
+                  SearchArticlesForm
 
 class UserSession (object):
     flag = False
@@ -126,7 +128,8 @@ def editArticle(request, articleID):
         if article is None:
             return HttpResponseRedirect('/')
         else:
-            form = AddArticleForm(initial={'title': article['title'], 'description': article['description']})
+            form = AddArticleForm(initial={'title': article['title'],
+                                           'description': article['description']})
 
     return render(request, 'editArticle.html', {'form': form, 'articleID': articleID})
 
@@ -156,7 +159,8 @@ def showArticle (request, articleID):
         return HttpResponseRedirect('/')
     else:
         article['ID'] = articleID
-        return render(request, 'article.html', {'article': article, 'form': form, 'user': userSession.user})
+        return render(request, 'article.html', {'article': article, 'form': form,
+                                                'user': userSession.user})
 
 def removeArticle(request, articleID):
     if userSession.flag == True:
@@ -281,9 +285,11 @@ def home(request):
     makeArticlesTimes(articlesList)
     if userSession.flag is True:
         text = "You are logged in as " + userSession.user.login + '.'
-        return render(request, 'home.html', {'user': userSession.user, 'form': form, 'text': text, 'articles': articlesList})
+        return render(request, 'home.html', {'user': userSession.user, 'form': form,
+                                             'text': text, 'articles': articlesList})
     else:
-        return render(request, 'home.html', {'user': None, 'guest': True, 'form': form, 'articles': articlesList})
+        return render(request, 'home.html', {'user': None, 'guest': True,
+                                             'form': form, 'articles': articlesList})
 
 def statistics(request):
     if userSession.flag == False:
@@ -307,8 +313,10 @@ def statistics(request):
     #The most commented
     users_commented = db.getMostCommentedUsers()
 
-    return render(request, 'statistics.html', {'articles_viewed': articles_viewed, 'articles_commented': articles_commented,
-                                               'users_published': users_published, 'users_commented': users_commented})
+    return render(request, 'statistics.html', {'articles_viewed': articles_viewed,
+                                               'articles_commented': articles_commented,
+                                               'users_published': users_published,
+                                               'users_commented': users_commented})
 
 def backupDatabase(request):
     if userSession.flag == False:
